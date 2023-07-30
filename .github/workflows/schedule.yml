@@ -1,7 +1,6 @@
 name: CI
 
 on:
-  # UTCなので実際は朝9時の実行を期待
   schedule:
     - cron: "*/1 * * * *"
   # 手動実行用の記述
