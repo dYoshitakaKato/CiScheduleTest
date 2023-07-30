@@ -1,0 +1,39 @@
+name: Manual
+
+on:
+  # 手動実行用の記述
+  workflow_dispatch:
+    strategy:
+      matrix:
+        index: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+
+jobs:
+  Release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create GitHub release note
+        run: |
+          cat ./release_note.txt > github_release_note.txt
+          MESSAGE="${{ github.workflow }} #${{ github.run_number }}"
+          URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo -e "\n[${MESSAGE}](${URL})" >> github_release_note.txt
+          cat github_release_note.txt
+
+      - name: Test data
+        run: |
+          dd if=/dev/zero of=dummy.txt bs=1M count=150
+
+      - name: Create GitHub release note
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "${{ github.workflow }} #${{ github.run_number }} ${{ matrix.index }}"
+          tag_name: 'schedule_${{ matrix.index }}_${{ github.run_id }}'
+          draft: true
+          body_path: ./github_release_note.txt
+          files: |
+            ./dummy.txt,
