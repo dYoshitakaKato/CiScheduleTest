@@ -2,7 +2,7 @@ name: CI
 
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/2 * * * *"
   # 手動実行用の記述
   workflow_dispatch:
 
