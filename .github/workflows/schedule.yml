@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  # UTCなので実際は朝9時の実行を期待
+  schedule:
+    - cron: "*/1 * * * *"
+  # 手動実行用の記述
+  workflow_dispatch:
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create GitHub release note
+        run: |
+          cat release_notes.txt > github_release_note.txt
+          MESSAGE="#${{ github.run_number }}"
+          URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo -e "\n[${MESSAGE}](${URL})" >> github_release_note.txt
+          cat github_release_note.txt
+
+      - name: Test data
+        run: |
+          dd if=/dev/zero of=dummy.txt bs=1M count=150
+
+      - name: Create GitHub release note
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "#${{ github.run_number }}"
+          tag_name: 'schedule_${{ github.run_id }}'
+          draft: true
+          body_path: ./github_release_note.txt
+          files: |
+            ./dummy.txt,
