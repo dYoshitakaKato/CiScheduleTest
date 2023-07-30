@@ -16,7 +16,7 @@ jobs:
 
       - name: Create GitHub release note
         run: |
-          cat ./release_notes.txt > github_release_note.txt
+          cat ./release_note.txt > github_release_note.txt
           MESSAGE="#${{ github.run_number }}"
           URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo -e "\n[${MESSAGE}](${URL})" >> github_release_note.txt
