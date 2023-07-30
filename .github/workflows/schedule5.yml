@@ -77,7 +77,7 @@ jobs:
       - name: Create GitHub release note
         run: |
           cat ./release_note.txt > github_release_note.txt
-          MESSAGE="#${{ github.run_number }}"
+          MESSAGE="${{ github.workflow }} #${{ github.run_number }}"
           URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo -e "\n[${MESSAGE}](${URL})" >> github_release_note.txt
           cat github_release_note.txt
@@ -89,7 +89,7 @@ jobs:
       - name: Create GitHub release note
         uses: softprops/action-gh-release@v1
         with:
-          name: "#${{ github.run_number }}"
+          name: "${{ github.workflow }} #${{ github.run_number }}"
           tag_name: 'schedule_${{ github.run_id }}'
           draft: true
           body_path: ./github_release_note.txt
